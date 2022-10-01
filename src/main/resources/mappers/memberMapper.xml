@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javagreenS_lhs.dao.MemberDAO">
+	<select id="getMemIdCheck" resultType="com.spring.javagreenS_lhs.vo.MemberVO">
+		select * from member where mid = #{mid};
+	</select>
+	<select id="searchId" resultType="com.spring.javagreenS_lhs.vo.MemberVO">
+		select * from member where email = #{mail};
+	</select>
+	<select id="searchPwd" resultType="com.spring.javagreenS_lhs.vo.MemberVO">
+		select * from member where mid = #{mid} and email = #{mail};
+	</select>
+	<select id="askList" resultType="com.spring.javagreenS_lhs.vo.AskVO">
+		select * from ask where mid = #{mid} order by idx desc limit #{startIndexNo},#{pageSize};
+	</select>
+	<select id="askContent" resultType="com.spring.javagreenS_lhs.vo.AskVO">
+		select * from ask where idx = #{idx};
+	</select>
+	<select id="askContentGet" resultType="com.spring.javagreenS_lhs.vo.AskCommentVO">
+		select * from askComment where askIdx = #{idx};
+	</select>
+	
+	<select id="totRecCnt" resultType="int">
+		select count(*) from music where mid = #{mid};
+	</select>
+	<select id="totRecCnt2" resultType="int">
+		select count(*) from ask where mid = #{mid};
+	</select>
+	
+	<insert id="setMemInputOk">
+    insert into member values (default,#{vo.name},#{vo.mid},#{vo.pwd},#{vo.age},#{vo.email},#{vo.tel},#{vo.photo},#{vo.address},default,default,default,default,default,default,default,default,default);
+  </insert>
+  <insert id="askSend">
+  	insert into ask values (default,#{vo.mid},#{name},#{vo.title},default,#{vo.content},default);
+  </insert> 
+   <insert id="setQrCreate">
+    insert into qrCode values (default,#{qrCodeName});
+  </insert>
+  
+
+	<update id="setMemberVisitProcess">
+    update member set todayCnt=#{todayCnt}, vCount=vCount+1, lastDate=now() where mid = #{mid};
+  </update>
+  
+  <update id="memberUpdate">
+	  update member set name=#{vo.name}, age=#{vo.age}, pwd=#{vo.pwd}, email=#{vo.email}, tel=#{vo.tel},address=#{vo.address},photo=#{vo.photo} where mid = #{vo.mid};
+  </update>
+  <update id="memDeleteOk">
+  	update member set userDel = 'OK' where mid = #{mid};
+  </update>
+  <update id="myMusicDel">
+  	update music set keep = 'NO' where idx = #{idx} and mid = #{mid};
+  </update>
+  <update id="myMusicPlus">
+  	update music set keep = 'OK' where idx = #{idx} and mid = #{mid};
+  </update>
+  <update id="searchPwdOk">
+  	update member set pwd = #{pwd} where mid = #{mid};
+  </update>
+  <update id="qrPoint">
+  	update member set money = money + #{point} where mid = #{mid};
+  </update>
+  
+  <delete id="askContentDel">
+  	delete from ask where idx = #{idx};
+  </delete>
+  
+ 
+</mapper>

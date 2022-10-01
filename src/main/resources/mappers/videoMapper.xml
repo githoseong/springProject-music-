@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javagreenS_lhs.dao.VideoDAO">
+	<select id="videoGet" resultType="com.spring.javagreenS_lhs.vo.VideoVO">
+		<if test=" order == '인기순'">
+			select * from video order by good desc limit #{startIndexNo},#{pageSize};
+		</if>	
+		<if test=" order == '가나다순'">
+			select * from video order by artist limit #{startIndexNo},#{pageSize};
+		</if>	
+		<if test=" order == '최신순'">
+			select * from video order by release1 desc limit #{startIndexNo},#{pageSize};
+		</if>	
+		<if test=" order == null">
+			select * from video order by release1 desc limit #{startIndexNo},#{pageSize};
+		</if>	
+	</select>
+	
+	<select id="videoGet2" resultType="com.spring.javagreenS_lhs.vo.VideoVO">
+		select * from video where idx = #{idx};
+	</select>
+	
+	<select id="totRecCnt" resultType="int">
+    select count(*) from video;
+  </select>
+	
+	<insert id="setVideoUpload">
+	  insert into video values (default,#{vo.title},#{vo.artist},#{vo.time1},#{vo.release1},#{vo.link},#{vo.FName},#{vo.FSName},#{vo.FSize},default,default,default,#{vo.content});
+	</insert>
+
+	<update id="setNewUpdate">
+		update video set  title = #{vo.title} , artist = #{vo.artist} , time1 = #{vo.time1} , release1 = #{vo.release1} , link = #{vo.link} , fName = #{vo.FName} , fSName = #{vo.FSName} , fSize = #{vo.FSize} , content = #{vo.content} where idx = #{vo.idx};
+	</update>
+	
+	<update id="setReadNum">
+		update video set readNum = readNum + 1 where idx = #{idx};
+	</update>
+	
+	<update id="videoGood">
+		update video set good = good + 1 where idx = #{idx};
+	</update>
+	
+	<delete id="setVideoDelete">
+		delete from video where idx = #{idx};
+	</delete>
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javagreenS_lhs.dao.NewDAO">
+	<select id="NewListGet" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+	 <if test = "country == '해외'">
+	 	select * from newUpload where country = '해외' order by idx desc limit #{startIndexNo},#{pageSize};
+	 </if>
+	 <if test = "country != '해외'">
+		select * from newUpload where country = '국내' order by idx desc limit #{startIndexNo},#{pageSize};
+	 </if>
+	</select>
+
+	<select id="totRecCnt" resultType="int">
+    select count(*) from newUpload where country = '국내';
+  </select>
+	<select id="totRecCnt2" resultType="int">
+    select count(*) from newUpload where country = '해외';
+  </select>
+  
+  <select id="musicList" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+  	select * from newUpload where idx = #{idx};
+  </select>
+  
+  <select id="moneyCheck" resultType="com.spring.javagreenS_lhs.vo.MemberVO">
+  	select * from member where mid = #{mid};
+  </select>
+  
+  
+  <insert id="setMusic">
+  	insert into music values(default,#{mid},#{idx},default);
+  </insert>
+  
+  <update id="downNumPost">
+ 		update newUpload set downNum = downNum + 1  where idx = #{idx};
+  </update>
+  
+  <update id="memDownUpdate">
+ 		update member set downNum = downNum + 1, money = money - 700, moneyTotal = moneyTotal + 700 where mid = #{mid};
+  </update>
+  
+  <update id="memLevelUpdate">
+  	<if test="flag == 1">
+  		update member set level = level + 1 where mid = #{mid} and moneyTotal > 10000;
+  	</if>
+  	<if test="flag == 2">
+  		update member set level = level + 1 where mid = #{mid} and moneyTotal > 50000;
+  	</if>
+  </update>
+  
+</mapper>

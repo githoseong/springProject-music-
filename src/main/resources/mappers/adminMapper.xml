@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javagreenS_lhs.dao.AdminDAO">
+	<select id="getNewListGet" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+		select * from newUpload order by idx desc limit #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="musicPlayGet" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+		select * from newUpload where idx = #{idx};
+	</select>
+	
+	<select id="musicPlayGet2" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+		select * from newUpload where idx = #{idx};
+	</select>
+
+	<select id="musicPlayGet3" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+		select newUpload.* from newUpload,music where music.mid = #{mid} and newUpload.idx = music.idx and newUpload.idx >= #{idx} and music.keep = 'OK' order by idx limit 1;
+		
+	</select>
+	
+	<select id="musicPlayGet4" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+		select newUpload.* from newUpload,music where music.mid = #{mid} and newUpload.idx = music.idx and  #{idx} >=newUpload.idx order by idx desc limit 1;
+	</select>
+	
+	<select id="banner" resultType="com.spring.javagreenS_lhs.vo.BannerVO">
+		select * from banner order by idx desc limit #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="getBanner" resultType="com.spring.javagreenS_lhs.vo.BannerVO">
+		select * from banner where idx = #{idx};
+	</select>
+	
+	<select id="memberList" resultType="com.spring.javagreenS_lhs.vo.MemberVO">
+		select *,(timestampdiff(DAY, lastDate , now())) as applyDiff from member order by idx desc limit #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="memSearch" resultType="com.spring.javagreenS_lhs.vo.MusicVO">
+		select * from music where idx = #{idx} and mid = #{mid};
+	</select>
+	
+	<select id="musicList" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+		<if test="key == 'my'">
+			select * from newUpload n,music m where m.mid = #{mid} and n.idx=m.idx order by m.idx limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test="key != 'my'">
+			select * from newUpload n,music m where m.mid = #{mid} and n.idx=m.idx and m.keep = 'OK' order by m.idx;
+		</if>
+	</select>
+	
+	<select id="playList" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+  	select * from newUpload where idx = #{cBox};
+  </select>
+	<select id="adAskList" resultType="com.spring.javagreenS_lhs.vo.AskVO">
+  	select * from ask order by idx desc limit #{startIndexNo},#{pageSize};
+  </select>
+	<select id="adAskContent" resultType="com.spring.javagreenS_lhs.vo.AskVO">
+  	select * from ask where idx = #{idx};
+  </select>
+	<select id="adAskCommentList" resultType="com.spring.javagreenS_lhs.vo.AskCommentVO">
+  	select * from askComment where askIdx = #{idx};
+  </select>
+  
+  <select id="memTotal" resultType="com.spring.javagreenS_lhs.vo.MemberVO">
+  	select sum(downNum) down,sum(moneyTotal) mon,sum(vCount) vCo,sum(todayCnt) tCnt,max(moneyTotal) maxMoney,max(downNum) maxDown,max(vCount) maxVcnt,max(todayCnt) maxTcnt  from member;
+  </select>
+  <select id="adMemList" resultType="com.spring.javagreenS_lhs.vo.MemberVO">
+  	select * from member order by moneyTotal desc limit 5; 
+  </select>
+  <select id="adMusicList" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+  	select * from newUpload order by downNum desc limit 3;
+  </select>
+  <select id="adVideoList" resultType="com.spring.javagreenS_lhs.vo.VideoVO">
+  	select * from video order by readNum desc limit 3;
+  </select>
+  
+  
+  <select id="totRecCnt" resultType="int">
+  	select count(*) from newUpload;
+  </select>
+  <select id="totRecCnt2" resultType="int">
+  	select count(*) from banner;
+  </select>
+  <select id="totRecCnt3" resultType="int">
+  	select count(*) from member;
+  </select>
+  <select id="totRecCnt4" resultType="int">
+  	select count(*) from ask;
+  </select>
+	
+
+	<insert id="setNewUpload">
+	  insert into newUpload values (default,#{vo.title},#{vo.artist},#{vo.genre},#{vo.country},#{vo.time1},#{vo.release1},#{vo.FName},#{vo.FSName},#{vo.FName2},#{vo.FSName2},#{vo.FSize},default,default,#{vo.content});
+	</insert>
+	
+	<insert id="bannerUpload">
+		insert into banner values (default,#{vo.FName},#{vo.FSName},#{vo.FName2},#{vo.FSName2},#{vo.FName3},#{vo.FSName3},default,default); 
+	</insert>
+	
+	<insert id="adminAskComment">
+		insert into askComment values (default,#{askIdx},#{vo2.mid},#{vo2.name},default,#{content});
+	</insert>
+	
+	<delete id="setNewDelete">
+		delete from newUpload where idx = #{idx};
+	</delete>
+	
+	<delete id="setBannerDelete">
+		delete from banner where idx = #{idx};
+	</delete>
+	
+	<delete id="userDel">
+		delete from member where mid = #{mid};
+	</delete>
+	
+	<delete id="adAskContentDel">
+		delete from ask where idx = #{idx};	
+	</delete>
+	
+	<delete id="adminAskCommentDel">
+		delete from askComment where idx = ${idx};
+	</delete>
+	
+	<update id="setNewUpdate">
+		update newUpload set title = #{vo.title}, artist = #{vo.artist}, genre = #{vo.genre}, country = #{vo.country}, time1 = #{vo.time1}, release1 = #{vo.release1}, fName = #{vo.FName}, fSName = #{vo.FSName}, fName2 = #{vo.FName2}, fSName2 = #{vo.FSName2}, fSize = #{vo.FSize}, content =#{vo.content} where idx = #{vo.idx} 
+	</update>
+	
+	<update id="bannerChoice">
+	<!-- <if test = "flag == 'OK'"> -->
+		update banner set flag = 'NO';
+	<!-- </if>	  -->
+	<if test = "flag == 'NO'"> 
+		update banner set flag = 'OK' where idx = #{idx};
+	</if> 	
+	</update>
+	
+	<update id="askAnswerSet">
+		update ask set answer = 'OK' where idx = #{idx};
+	</update>
+</mapper>

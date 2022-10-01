@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javagreenS_lhs.dao.HomeDAO">
+	<select id="bannerShow1" resultType="com.spring.javagreenS_lhs.vo.BannerVO">
+		select * from banner where flag = 'OK';
+	</select>
+	<select id="newList" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+		select * from newUpload order by idx desc limit 6;
+	</select>
+	<select id="chartList" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+		select * from newUpload order by downNum desc limit 10;
+	</select>
+	<select id="videoList" resultType="com.spring.javagreenS_lhs.vo.VideoVO">
+		select * from video order by release1 desc limit 9;
+	</select>
+	<select id="magazineList" resultType="com.spring.javagreenS_lhs.vo.MagazineVO">
+		select * from magazine order by fDate desc limit 1;
+	</select>
+	<select id="getNewSearch" resultType="com.spring.javagreenS_lhs.vo.UploadVO">
+		select * from newUpload where title like concat('%',#{searchString},'%')|| replace(title,' ','') like concat('%',#{searchString},'%') || artist like concat('%',#{searchString},'%') || replace(artist,' ','') like concat('%',#{searchString},'%') order by idx desc ;
+	</select>
+	<select id="getVideoSearch" resultType="com.spring.javagreenS_lhs.vo.VideoVO">
+		select * from video where title like concat('%',#{searchString},'%') || replace(title,' ','') like concat('%',#{searchString},'%') || artist like concat('%',#{searchString},'%') || replace(artist,' ','') like concat('%',#{searchString},'%') order by idx desc ;
+	</select>
+	<select id="getMagazineSearch" resultType="com.spring.javagreenS_lhs.vo.MagazineVO">
+		select * from magazine where title like concat('%',#{searchString},'%') || replace(title,' ','') like concat('%',#{searchString},'%') order by idx desc ;
+	</select>
+	<select id="getBoardSearch" resultType="com.spring.javagreenS_lhs.vo.BoardVO">
+		select * from board where title like concat('%',#{searchString},'%') || replace(title,' ','') like concat('%',#{searchString},'%') || content like concat('%',#{searchString},'%') || replace(content,' ','') like concat('%',#{searchString},'%') order by idx desc ;
+	</select>
+</mapper>
